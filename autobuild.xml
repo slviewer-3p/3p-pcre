@@ -1,0 +1,49 @@
+<?xml version="1.0" ?>
+<llsd>
+  <map>
+    <key>pcre</key>
+    <map>
+      <key>build</key>
+      <map>
+        <key>linux</key>
+        <map>
+          <key>command</key>
+          <string>bash build-cmd.sh</string>
+          <key>directory</key>
+          <string>stage</string>
+        </map>
+      </map>
+      <key>license</key>
+      <string>bsd</string>
+      <key>licensefile</key>
+      <string>LICENSES/pcre-license.txt</string>
+      <key>manifest</key>
+      <map>
+        <key>common</key>
+        <map>
+          <key>files</key>
+          <array>
+            <string>libraries/include/pcre</string>
+            <string>LICENSES/*.txt</string>
+          </array>
+        </map>
+        <key>linux</key>
+        <map>
+          <key>files</key>
+          <array>
+            <string>libraries/i686-linux/lib_debug_client/*.so*</string>
+            <string>libraries/i686-linux/lib_debug_client/*a</string>
+            <string>libraries/i686-linux/lib_release_client/*.so*</string>
+            <string>libraries/i686-linux/lib_release_client/*.a</string>
+          </array>
+        </map>
+      </map>
+      <key>sourcedir</key>
+      <string>.</string>
+      <key>uploadtos3</key>
+      <boolean>true</boolean>
+      <key>version</key>
+      <string>7.6</string>
+    </map>
+  </map>
+</llsd>

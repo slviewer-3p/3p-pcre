@@ -5,6 +5,13 @@
     <map>
       <key>build</key>
       <map>
+        <key>darwin</key>
+        <map>
+          <key>command</key>
+          <string>bash build-cmd.sh</string>
+          <key>directory</key>
+          <string>stage</string>
+        </map>
         <key>linux</key>
         <map>
           <key>command</key>
@@ -25,6 +32,13 @@
           <array>
             <string>libraries/include/pcre</string>
             <string>LICENSES/*.txt</string>
+          </array>
+        </map>
+        <key>darwin</key>
+        <map>
+          <key>files</key>
+          <array>
+            <string>libraries/universal-darwin/lib_release/*.a</string>
           </array>
         </map>
         <key>linux</key>

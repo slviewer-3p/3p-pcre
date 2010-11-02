@@ -20,6 +20,20 @@ set -x
 top="$(pwd)"
 
 case "$AUTOBUILD_PLATFORM" in
+        "darwin")
+			libdir="$top/stage/libraries/universal-darwin/"
+            mkdir -p "$libdir"/lib_{debug,release}
+			configure
+			make 
+
+			cp ".libs/libpcre.a" \
+				"$libdir/lib_release/libpcre.a"
+			cp ".libs/libpcrecpp.a" \
+				"$libdir/lib_release/libpcrecpp.a"
+			cp ".libs/libpcreposix.a" \
+				"$libdir/lib_release/libpcreposix.a"
+        ;;
+
         "linux")
 			libdir="$top/stage/libraries/i686-linux/"
             mkdir -p "$libdir"/lib_{debug,release}_client

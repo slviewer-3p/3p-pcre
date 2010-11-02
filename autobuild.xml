@@ -31,9 +31,6 @@
         <map>
           <key>files</key>
           <array>
-            <string>libraries/i686-linux/lib_debug_client/*.so*</string>
-            <string>libraries/i686-linux/lib_debug_client/*a</string>
-            <string>libraries/i686-linux/lib_release_client/*.so*</string>
             <string>libraries/i686-linux/lib_release_client/*.a</string>
           </array>
         </map>

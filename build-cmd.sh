@@ -26,21 +26,12 @@ case "$AUTOBUILD_PLATFORM" in
 			configure
 			make 
 
-#			cp "external-libs/boost/lib/mingw/libboost_filesystem.a" \
-#				"$libdir/lib_release_client/libboost_filesystem.a"
-#			cp "external-libs/boost/lib/mingw/libboost_system.a" \
-#				"$libdir/lib_release_client/libboost_system.a"
-#
-#			cp "build/linux-1.4/libcollada14dom.a" \
-#				"$libdir/lib_release_client/libcollada14dom.a"
-#
-#			cp "external-libs/boost/lib/mingw/libboost_filesystem.a" \
-#				"$libdir/lib_debug_client/libboost_filesystem.a"
-#			cp "external-libs/boost/lib/mingw/libboost_system.a" \
-#				"$libdir/lib_debug_client/libboost_system.a"
-#
-#			cp "build/linux-1.4-d/libcollada14dom-d.a" \
-#				"$libdir/lib_debug_client/libcollada14dom-d.a"
+			cp ".libs/libpcre.a" \
+				"$libdir/lib_release_client/libpcre.a"
+			cp ".libs/libpcrecpp.a" \
+				"$libdir/lib_release_client/libpcrecpp.a"
+			cp ".libs/libpcreposix.a" \
+				"$libdir/lib_release_client/libpcreposix.a"
         ;;
 
 esac

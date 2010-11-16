@@ -21,9 +21,11 @@ top="$(pwd)"
 
 case "$AUTOBUILD_PLATFORM" in
         "darwin")
-			libdir="$top/stage/libraries/universal-darwin/"
-            mkdir -p "$libdir"/lib_{debug,release}
-			configure
+		libdir="$top/stage/libraries/universal-darwin/"
+		mkdir -p "$libdir"/lib_{debug,release}
+
+		opts="-O2 -arch i386 -mmacosx-version-min=10.4 -DMAC_OS_X_VERSION_MIN_REQUIRED=1040 -iwithsysroot /Developer/SDKs/MacOSX10.4u.sdk"
+		CFLAGS="$opts" CXXFLAGS="$opts" LDFLAGS="$opts" ./configure --disable-dependency-tracking
 			make 
 
 			cp ".libs/libpcre.a" \
@@ -37,7 +39,7 @@ case "$AUTOBUILD_PLATFORM" in
         "linux")
 			libdir="$top/stage/libraries/i686-linux/"
             mkdir -p "$libdir"/lib_{debug,release}_client
-			configure
+			./configure
 			make 
 
 			cp ".libs/libpcre.a" \

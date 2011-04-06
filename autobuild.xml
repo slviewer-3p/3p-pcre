@@ -1,64 +1,106 @@
 <?xml version="1.0" ?>
 <llsd>
 <map>
-    <key>package_definition</key>
+    <key>package_description</key>
     <map>
-      <key>build</key>
-      <map>
-        <key>darwin</key>
-        <map>
-          <key>command</key>
-          <string>bash build-cmd.sh</string>
-          <key>directory</key>
-          <string>stage</string>
-        </map>
-        <key>linux</key>
-        <map>
-          <key>command</key>
-          <string>bash build-cmd.sh</string>
-          <key>directory</key>
-          <string>stage</string>
-        </map>
-      </map>
       <key>license</key>
       <string>bsd</string>
-      <key>licensefile</key>
+      <key>license_file</key>
       <string>LICENSES/pcre-license.txt</string>
-      <key>manifest</key>
+      <key>name</key>
+      <string>pcre</string>
+      <key>platforms</key>
       <map>
         <key>common</key>
         <map>
-          <key>files</key>
+          <key>configurations</key>
+          <map>
+            <key>RelWithDebInfo</key>
+            <map>
+              <key>build</key>
+              <map>
+                <key>command</key>
+                <string>bash</string>
+                <key>options</key>
+                <array>
+                  <string>../build-cmd.sh</string>
+                </array>
+              </map>
+              <key>name</key>
+              <string>RelWithDebInfo</string>
+            </map>
+          </map>
+          <key>manifest</key>
           <array>
             <string>libraries/include/pcre</string>
             <string>LICENSES/*.txt</string>
           </array>
+          <key>name</key>
+          <string>common</string>
         </map>
         <key>darwin</key>
         <map>
-          <key>files</key>
+          <key>build_directory</key>
+          <string>stage</string>
+          <key>configurations</key>
+          <map>
+            <key>RelWithDebInfo</key>
+            <map>
+              <key>build</key>
+              <map>
+                <key>arguments</key>
+                <array>
+                  <string>build-cmd.sh</string>
+                </array>
+                <key>command</key>
+                <string>bash</string>
+              </map>
+              <key>default</key>
+              <boolean>true</boolean>
+              <key>name</key>
+              <string>RelWithDebInfo</string>
+            </map>
+          </map>
+          <key>manifest</key>
           <array>
             <string>libraries/universal-darwin/lib_release/*.a</string>
           </array>
+          <key>name</key>
+          <string>darwin</string>
         </map>
         <key>linux</key>
         <map>
-          <key>files</key>
+          <key>build_directory</key>
+          <string>stage</string>
+          <key>configurations</key>
+          <map>
+            <key>RelWithDebInfo</key>
+            <map>
+              <key>build</key>
+              <map>
+              </map>
+              <key>default</key>
+              <boolean>true</boolean>
+              <key>name</key>
+              <string>RelWithDebInfo</string>
+            </map>
+          </map>
+          <key>manifest</key>
           <array>
             <string>libraries/i686-linux/lib_release_client/*.a</string>
           </array>
+          <key>name</key>
+          <string>linux</string>
         </map>
       </map>
-      <key>name</key>
-      <string>pcre</string>
-      <key>sourcedir</key>
+      <key>source_directory</key>
       <string>.</string>
-      <key>uploadtos3</key>
-      <boolean>true</boolean>
       <key>version</key>
       <string>7.6</string>
     </map>
+    <key>type</key>
+    <string>autobuild</string>
     <key>version</key>
-    <string>1.1</string>
+    <string>1.2</string>
   </map>
 </llsd>

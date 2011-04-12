@@ -24,38 +24,38 @@ top="$(pwd)"
 
 case "$AUTOBUILD_PLATFORM" in
         "darwin")
-		libdir="$top/stage/libraries/universal-darwin/"
-		mkdir -p "$libdir"/lib_{debug,release}
+		libdir="$top/stage/lib"
+		mkdir -p "$libdir"/{debug,release}
 
 		opts="-O2 -arch i386 -mmacosx-version-min=10.4 -DMAC_OS_X_VERSION_MIN_REQUIRED=1040 -iwithsysroot /Developer/SDKs/MacOSX10.4u.sdk"
 		CFLAGS="$opts" CXXFLAGS="$opts" LDFLAGS="$opts" ./configure --disable-dependency-tracking
 			make 
 
 			cp ".libs/libpcre.a" \
-				"$libdir/lib_release/libpcre.a"
+				"$libdir/release/libpcre.a"
 			cp ".libs/libpcrecpp.a" \
-				"$libdir/lib_release/libpcrecpp.a"
+				"$libdir/release/libpcrecpp.a"
 			cp ".libs/libpcreposix.a" \
-				"$libdir/lib_release/libpcreposix.a"
+				"$libdir/release/libpcreposix.a"
         ;;
 
         "linux")
-			libdir="$top/stage/libraries/i686-linux/"
-            mkdir -p "$libdir"/lib_{debug,release}_client
+			libdir="$top/stage/lib/"
+            mkdir -p "$libdir"/{debug,release}
 			./configure
 			make 
 
 			cp ".libs/libpcre.a" \
-				"$libdir/lib_release_client/libpcre.a"
+				"$libdir/release/libpcre.a"
 			cp ".libs/libpcrecpp.a" \
-				"$libdir/lib_release_client/libpcrecpp.a"
+				"$libdir/release/libpcrecpp.a"
 			cp ".libs/libpcreposix.a" \
-				"$libdir/lib_release_client/libpcreposix.a"
+				"$libdir/release/libpcreposix.a"
         ;;
 
 esac
-mkdir -p "stage/libraries/include/pcre"
-cp -R *.h "stage/libraries/include/pcre/"
+mkdir -p "stage/include/pcre"
+cp -R *.h "stage/include/pcre/"
 mkdir -p stage/LICENSES
 cp "LICENCE" "stage/LICENSES/pcre-license.txt"
 

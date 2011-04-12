@@ -32,7 +32,7 @@
           </map>
           <key>manifest</key>
           <array>
-            <string>libraries/include/pcre</string>
+            <string>include/pcre</string>
             <string>LICENSES/*.txt</string>
           </array>
           <key>name</key>
@@ -63,7 +63,7 @@
           </map>
           <key>manifest</key>
           <array>
-            <string>libraries/universal-darwin/lib_release/*.a</string>
+            <string>lib/release/*.a</string>
           </array>
           <key>name</key>
           <string>darwin</string>
@@ -87,7 +87,7 @@
           </map>
           <key>manifest</key>
           <array>
-            <string>libraries/i686-linux/lib_release_client/*.a</string>
+            <string>lib/release/*.a</string>
           </array>
           <key>name</key>
           <string>linux</string>

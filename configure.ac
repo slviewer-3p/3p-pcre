@@ -60,6 +60,9 @@ then
   fi
 fi
 
+# enforce 32 bit builds
+CFLAGS += -m32
+CXXFLAGS += -m32
 
 AC_PROG_INSTALL
 AC_LIBTOOL_WIN32_DLL

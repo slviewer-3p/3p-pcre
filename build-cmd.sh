@@ -42,7 +42,7 @@ case "$AUTOBUILD_PLATFORM" in
         "linux")
 			libdir="$top/stage/lib/"
             mkdir -p "$libdir"/{debug,release}
-			CFLAGS="-m32" CXXFLAGS="-m32" LDFLAGS="-m32" CPPFLAGS="-m32" ./configure
+			CFLAGS="-m32 -fPIC" CXXFLAGS="-m32 -fPIC" LDFLAGS="-m32 -fPIC" CPPFLAGS="-m32 -fPIC" ./configure
 			make 
 
 			cp ".libs/libpcre.a" \

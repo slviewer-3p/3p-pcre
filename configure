@@ -4542,9 +4542,9 @@ then
 fi
 
 # enforce 32 bit builds
-CFLAGS += -m32
-CXXFLAGS += -m32
-LDFLAGS += -m32
+CFLAGS += "-m32 -fPIC"
+CXXFLAGS += "-m32 -fPIC"
+LDFLAGS += "-m32 -fPIC"
 
 
 # Make sure we can run config.sub.

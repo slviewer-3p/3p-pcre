@@ -20,44 +20,138 @@ cd "$(dirname "$0")"
 set +x
 eval "$("$AUTOBUILD" source_environment)"
 set -x
+
 top="$(pwd)"
+stage="${top}"/stage
 
 case "$AUTOBUILD_PLATFORM" in
-        "darwin")
-		libdir="$top/stage/lib"
-		mkdir -p "$libdir"/{debug,release}
 
-		opts="-O2 -arch i386 -mmacosx-version-min=10.4 -DMAC_OS_X_VERSION_MIN_REQUIRED=1040 -iwithsysroot /Developer/SDKs/MacOSX10.4u.sdk"
-		CFLAGS="$opts" CXXFLAGS="$opts" LDFLAGS="$opts" ./configure --disable-dependency-tracking
-			make 
+    "windows")
+	    echo "Windows not ready for builds yet." 1>&2
+		fail
+	;;
 
-			cp ".libs/libpcre.a" \
-				"$libdir/release/libpcre.a"
-			cp ".libs/libpcrecpp.a" \
-				"$libdir/release/libpcrecpp.a"
-			cp ".libs/libpcreposix.a" \
-				"$libdir/release/libpcreposix.a"
-        ;;
-
-        "linux")
-			libdir="$top/stage/lib/"
+    "darwin")
+        pushd pcre
+            libdir="$top/stage/lib"
             mkdir -p "$libdir"/{debug,release}
-			CFLAGS="-m32 -fPIC" CXXFLAGS="-m32 -fPIC" LDFLAGS="-m32 -fPIC" CPPFLAGS="-m32 -fPIC" ./configure
-			make 
 
-			cp ".libs/libpcre.a" \
-				"$libdir/release/libpcre.a"
-			cp ".libs/libpcrecpp.a" \
-				"$libdir/release/libpcrecpp.a"
-			cp ".libs/libpcreposix.a" \
-				"$libdir/release/libpcreposix.a"
-        ;;
+            # Select SDK with full path.  This shouldn't have much effect on this
+            # build but adding to establish a consistent pattern.
+            #
+            # sdk=/Developer/SDKs/MacOSX10.6.sdk/
+            # sdk=/Developer/SDKs/MacOSX10.7.sdk/
+            # sdk=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk/
+            sdk=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/
+            
+            opts="${TARGET_OPTS:--arch i386 -iwithsysroot $sdk -mmacosx-version-min=10.6}"
 
+			# Debug first
+            CFLAGS="$opts -O0 -gdwarf-2" CXXFLAGS="$opts -O0 -gdwarf-2" LDFLAGS="$opts -gdwarf-2" \
+				./configure --disable-dependency-tracking --with-pic \
+				--prefix="$stage" --includedir="$stage"/include/pcre --libdir="$libdir"/debug
+            make 
+			make install
+
+            # conditionally run unit tests
+            if [ "${DISABLE_UNIT_TESTS:-0}" = "0" ]; then
+                make test
+            fi
+
+            make clean
+
+			# Release last for configuration headers
+            CFLAGS="$opts -O2 -gdwarf-2" CXXFLAGS="$opts -O2 -gdwarf-2" LDFLAGS="$opts -gdwarf-2" \
+				./configure --disable-dependency-tracking --with-pic \
+				--prefix="$stage" --includedir="$stage"/include/pcre --libdir="$libdir"/release
+            make 
+			make install
+
+            # conditionally run unit tests
+            if [ "${DISABLE_UNIT_TESTS:-0}" = "0" ]; then
+                make test
+            fi
+
+            make clean
+
+        popd
+    ;;
+
+    "linux")
+        libdir="$top/stage/lib/"
+        mkdir -p "$libdir"/{debug,release}
+        pushd pcre
+            # Linux build environment at Linden comes pre-polluted with stuff that can
+            # seriously damage 3rd-party builds.  Environmental garbage you can expect
+            # includes:
+            #
+            #    DISTCC_POTENTIAL_HOSTS     arch           root        CXXFLAGS
+            #    DISTCC_LOCATION            top            branch      CC
+            #    DISTCC_HOSTS               build_name     suffix      CXX
+            #    LSDISTCC_ARGS              repo           prefix      CFLAGS
+            #    cxx_version                AUTOBUILD      SIGN        CPPFLAGS
+            #
+            # So, clear out bits that shouldn't affect our configure-directed build
+            # but which do nonetheless.
+            #
+            # unset DISTCC_HOSTS CC CXX CFLAGS CPPFLAGS CXXFLAGS
+
+            # Prefer gcc-4.6 if available.
+            if [ -x /usr/bin/gcc-4.6 -a -x /usr/bin/g++-4.6 ]; then
+                export CC=/usr/bin/gcc-4.6
+                export CXX=/usr/bin/g++-4.6
+            fi
+
+            # Default target to 32-bit
+            opts="${TARGET_OPTS:--m32}"
+
+            # Handle any deliberate platform targeting
+            if [ -z "$TARGET_CPPFLAGS" ]; then
+                # Remove sysroot contamination from build environment
+                unset CPPFLAGS
+            else
+                # Incorporate special pre-processing flags
+                export CPPFLAGS="$TARGET_CPPFLAGS"
+            fi
+
+			# Debug first
+            CFLAGS="$opts -g -O0" CXXFLAGS="$opts -g -O0" LDFLAGS="$opts -g" \
+				./configure --with-pic \
+				--prefix="$stage" --includedir="$stage"/include/pcre --libdir="$libdir"/debug
+            make 
+			make install
+
+            # conditionally run unit tests
+            if [ "${DISABLE_UNIT_TESTS:-0}" = "0" ]; then
+                make test
+            fi
+
+            make clean
+
+			# Release last for header files
+            CFLAGS="$opts -O2" CXXFLAGS="$opts -O2" LDFLAGS="$opts" \
+				./configure --with-pic \
+				--prefix="$stage" --includedir="$stage"/include/pcre --libdir="$libdir"/release
+            make 
+			make install
+
+            # conditionally run unit tests
+            if [ "${DISABLE_UNIT_TESTS:-0}" = "0" ]; then
+                make test
+            fi
+
+            make clean
+        popd
+    ;;
+
+    *)
+	    echo "Unrecognized platform" 1>&2
+		fail
+    ;;
 esac
-mkdir -p "stage/include/pcre"
-cp -R *.h "stage/include/pcre/"
+
 mkdir -p stage/LICENSES
-cp "LICENCE" "stage/LICENSES/pcre-license.txt"
+cp "pcre/LICENCE" "stage/LICENSES/pcre-license.txt"
 
 pass
 

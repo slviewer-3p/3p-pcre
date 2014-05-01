@@ -35,7 +35,8 @@ man page, in case the conversion went wrong.
 The C++ wrapper for PCRE was provided by Google Inc. Some additional
 functionality was added by Giuseppe Maxia. This brief man page was constructed
 from the notes in the <i>pcrecpp.h</i> file, which should be consulted for
-further details.
+further details. Note that the C++ wrapper supports only the original 8-bit
+PCRE library. There is no 16-bit or 32-bit support at present.
 </P>
 <br><a name="SEC3" href="#TOC1">MATCHING INTERFACE</a><br>
 <P>
@@ -118,6 +119,11 @@ If you need more, consider using the more general interface
 <b>pcrecpp::RE::DoMatch</b>. See <b>pcrecpp.h</b> for the signature for
 <b>DoMatch</b>.
 </P>
+<P>
+NOTE: Do not use <b>no_arg</b>, which is used internally to mark the end of a
+list of optional arguments, as a placeholder for missing arguments, as this can
+lead to segfaults.
+</P>
 <br><a name="SEC4" href="#TOC1">QUOTING METACHARACTERS</a><br>
 <P>
 You can use the "QuoteMeta" operation to insert backslashes before all
@@ -186,7 +192,7 @@ supported:
    PCRE_DOTALL           dot matches newlines        /s
    PCRE_DOLLAR_ENDONLY   $ matches only at end       N/A
    PCRE_EXTRA            strict escape parsing       N/A
-   PCRE_EXTENDED         ignore whitespaces          /x
+   PCRE_EXTENDED         ignore white spaces         /x
    PCRE_UTF8             handles UTF8 chars          built-in
    PCRE_UNGREEDY         reverses * and *?           N/A
    PCRE_NO_AUTO_CAPTURE  disables capturing parens   N/A (*)
@@ -227,7 +233,7 @@ Normally, to pass one or more modifiers to a RE class, you declare
 a <i>RE_Options</i> object, set the appropriate options, and pass this
 object to a RE constructor. Example:
 <pre>
-   RE_options opt;
+   RE_Options opt;
    opt.set_caseless(true);
    if (RE("HELLO", opt).PartialMatch("hello world")) ...
 </pre>
@@ -277,10 +283,7 @@ is defined in the pcrecpp namespace.
   Example: read lines of the form "var = value" from a string.
      string contents = ...;                 // Fill string somehow
      pcrecpp::StringPiece input(contents);  // Wrap in a StringPiece
-</PRE>
-</P>
-<P>
-<pre>
+
      string var;
      int value;
      pcrecpp::RE re("(\\w+) = (\\d+)\n");
@@ -358,7 +361,7 @@ Copyright &copy; 2007 Google Inc.
 </P>
 <br><a name="SEC12" href="#TOC1">REVISION</a><br>
 <P>
-Last updated: 12 November 2007
+Last updated: 08 January 2012
 <br>
 <p>
 Return to the <a href="index.html">PCRE index page</a>.

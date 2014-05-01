@@ -60,10 +60,6 @@ then
   fi
 fi
 
-# enforce 32 bit builds
-CFLAGS += "-m32 -fPIC"
-CXXFLAGS += "-m32 -fPIC"
-LDFLAGS += "-m32 -fPIC"
 
 AC_PROG_INSTALL
 AC_LIBTOOL_WIN32_DLL

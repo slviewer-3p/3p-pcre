@@ -1,0 +1,29 @@
+
+# Cache pre-load settings for Linden windows builds.
+# To be used with cmake's '-C' option to pre-selection
+# options and advanced settings.
+
+SET(BUILD_SHARED_LIBS OFF CACHE BOOL
+    "Build shared libraries instead of static ones.")
+
+SET(CMAKE_INSTALL_PREFIX "../../stage" CACHE PATH
+    "Install path prefix, prepended onto install directories.")
+
+# This doesn't work as intended but it is what we'd like
+SET(CMAKE_USE_RELATIVE_PATHS ON CACHE BOOL
+    "If true, cmake will use relative paths in makefiles and projects.")
+
+IF(BUILD_SHARED_LIBS)
+    SET(INSTALL_MSVC_PDB ON CACHE BOOL
+        "Install .pdb files built by MSVC, if generated")
+ENDIF(BUILD_SHARED_LIBS)
+
+SET(PCRE_SUPPORT_JIT OFF CACHE BOOL
+    "Enable support for Just-in-time compiling.")
+
+SET(PCRE_SUPPORT_UNICODE_PROPERTIES ON CACHE BOOL
+    "Enable support for Unicode properties (if set, UTF support will be enabled as well).")
+
+SET(PCRE_SUPPORT_UTF ON CACHE BOOL
+    "Enable support for Unicode Transformation Format (UTF-8/UTF-16/UTF-32) encoding.")
+

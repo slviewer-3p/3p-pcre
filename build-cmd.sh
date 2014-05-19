@@ -26,9 +26,55 @@ stage="${top}"/stage
 
 case "$AUTOBUILD_PLATFORM" in
 
+
     "windows")
-        echo "Windows not ready for builds yet." 1>&2
-        fail
+        load_vsvars
+        pushd pcre
+
+            # Create project/build directory
+            mkdir -p Win32
+            pushd Win32
+
+                # Generate project files
+                # cmake has some internal problems with the -P/-C options
+                # regarding trailing spaces and the length of the filename.
+                # Long filenames would cause spurious 'Error processing file'
+                # errors and I eventually gave up on this dead horse.
+                #
+                # cmake -P ../Linden.Win32.Cache
+                cmake -C../Linden.Win32.Cache -G'Visual Studio 10' --build . ..
+
+                # Debug first
+                build_sln PCRE.sln "Debug|Win32" ALL_BUILD
+
+                # Install and move pieces around
+                build_sln INSTALL.vcxproj "Debug|Win32"
+                mkdir -p "$stage"/lib/debug/
+                mv "$stage"/lib/*.lib "$stage"/lib/debug/
+
+                # conditionally run unit tests
+                if [ "${DISABLE_UNIT_TESTS:-0}" = "0" ]; then
+                    build_sln RUN_TESTS.vcxproj "Debug|Win32"
+                fi
+
+                # Now release.
+                build_sln PCRE.sln "Release|Win32" ALL_BUILD
+
+                # Install and move pieces around
+                build_sln INSTALL.vcxproj "Release|Win32"
+                mkdir -p "$stage"/lib/release/
+                mv "$stage"/lib/*.lib "$stage"/lib/release/
+
+                # conditionally run unit tests
+                if [ "${DISABLE_UNIT_TESTS:-0}" = "0" ]; then
+                    build_sln RUN_TESTS.vcxproj "Release|Win32"
+                fi
+            popd
+
+            # Fixup include directory
+            mkdir -p "$stage"/include/pcre/
+            mv "$stage"/include/*.h "$stage"/include/pcre/
+        popd
     ;;
 
     "darwin")
@@ -161,7 +207,7 @@ case "$AUTOBUILD_PLATFORM" in
 esac
 
 mkdir -p stage/LICENSES
-cp "pcre/LICENCE" "stage/LICENSES/pcre-license.txt"
+cp -a "pcre/LICENCE" "stage/LICENSES/pcre-license.txt"
 mkdir -p "$stage"/docs/pcre/
 cp -a "$top"/README.Linden "$stage"/docs/pcre/
 

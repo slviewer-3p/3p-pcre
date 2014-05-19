@@ -38,7 +38,33 @@
     * Unicode properties support
     * Disabled JIT
 
-    Windows is more of a problem and will be taken up shortly.
+    Windows isn't pretty and several approaches are possible.  For this,
+    I went with 'cmake' which was nominally already functional and was
+    at least capable of doing the right thing with tests and generated
+    header files.
+
+    But the model of the cmake writers was for fixed paths and the use
+    of GUIs to configure the build.  This doesn't work in a headless
+    build environment so a cache preload file,
+    pcre/Linden.Win32.Cache, was created with the desired build
+    options.  Cmake's cache preload code is, as usual, buggy and
+    filenames need to be kept short.  But this seems to get the job
+    done and results in working unit tests and installation passes
+    with only a little touch-up work needed after the build.
+
+    Another option was a custom Makefile.  I actually had this working
+    but decided to go with 'cmake' in the hope of getting project
+    files that would do more of the work.  Neither choice is a clear
+    winner but cmake it is for now.  Here's some additional information
+    for anyone wanting to visit Windows builds:
+
+    ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/Contrib/pcre-winpcre.mak
+    (An nmake Makefile that does much of the work but leaves out the
+    configuration steps.
+
+    http://www.rexegg.com/pcregrep-pcretest.html
+    (Binary build for Windows.  Dig through that and you'll discover
+    how they built their packages.)
 
 
 3.  Source Origin
@@ -58,6 +84,12 @@
     * include/pcre/pcre.h
 
     Windows (debug and release):
+    * lib/release/pcre.lib
+    * lib/release/pcrecpp.lib
+    * lib/release/pcreposix.lib
+    * lib/debug/pcrecppd.lib
+    * lib/debug/pcred.lib
+    * lib/debug/pcreposixd.lib
 
     Mac OS X (debug and release):
     * lib/release/libpcrecpp.a

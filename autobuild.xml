@@ -7,6 +7,10 @@
       <string>bsd</string>
       <key>license_file</key>
       <string>LICENSES/pcre-license.txt</string>
+      <key>copyright</key>
+      <string>Copyright (c) 1997-2014 University of Cambridge; Copyright(c) 2009-2014 Zoltan Herczeg; Copyright (c) 2007-2012, Google Inc.</string>
+      <key>description</key>
+      <string>PCRE Perl-compatible regular expression library</string>
       <key>name</key>
       <string>pcre</string>
       <key>platforms</key>
@@ -32,11 +36,43 @@
           </map>
           <key>manifest</key>
           <array>
-            <string>include/pcre</string>
+            <string>include/pcre/*</string>
             <string>LICENSES/*.txt</string>
+            <string>docs/pcre/README.Linden</string>
           </array>
           <key>name</key>
           <string>common</string>
+        </map>
+        <key>windows</key>
+        <map>
+          <key>build_directory</key>
+          <string>stage</string>
+          <key>configurations</key>
+          <map>
+            <key>RelWithDebInfo</key>
+            <map>
+              <key>build</key>
+              <map>
+                <key>arguments</key>
+                <array>
+                  <string>build-cmd.sh</string>
+                </array>
+                <key>command</key>
+                <string>bash</string>
+              </map>
+              <key>default</key>
+              <boolean>true</boolean>
+              <key>name</key>
+              <string>RelWithDebInfo</string>
+            </map>
+          </map>
+          <key>manifest</key>
+          <array>
+            <string>lib/release/*.lib</string>
+            <string>lib/debug/*.lib</string>
+          </array>
+          <key>name</key>
+          <string>windows</string>
         </map>
         <key>darwin</key>
         <map>
@@ -98,7 +134,7 @@
       <key>source_directory</key>
       <string>.</string>
       <key>version</key>
-      <string>7.6</string>
+      <string>8.35</string>
     </map>
     <key>type</key>
     <string>autobuild</string>

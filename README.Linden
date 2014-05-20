@@ -130,6 +130,10 @@
 
 5.  Consumers/Dependents
 
+    Consumers of static/archive versions of this library should define
+    PCRE_STATIC before including any header file.  This prevents some
+    declspec ugliness.
+
     Packages dependent on pcre which will need attention
     (autobuild.xml) after changes.  This is not authoritative, use
     appropriate build tools to find all dependents.

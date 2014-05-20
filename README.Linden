@@ -52,6 +52,26 @@
     done and results in working unit tests and installation passes
     with only a little touch-up work needed after the build.
 
+    An additional problem with cmake and our build environment is that
+    the resulting INSTALL and RUN_TESTS projects are not part of the
+    solution build.  This gives our build_sln invocation of devenv
+    errors as it trips over these disabled projects.  'msbuild' will
+    work but you do need the .NET dev environment as the command lives
+    down in it.  'devenv' invocations still work so that's what we do
+    for the INSTALL and RUN_TESTS projects.
+
+    * Should work, doesn't:
+
+         build_sln INSTALL.vcxproj "Debug|Win32"
+
+    * Does work, requires more junk in path:
+
+         msbuild INSTALL.vcxproj /t:Build "/p:Configuration=Debug;Platform=Win32"
+
+    * Ol' reliable:
+
+         devenv PCRE.sln /Build "Debug|Win32" /Project INSTALL.vcxproj
+
     Another option was a custom Makefile.  I actually had this working
     but decided to go with 'cmake' in the hope of getting project
     files that would do more of the work.  Neither choice is a clear

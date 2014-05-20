@@ -48,26 +48,26 @@ case "$AUTOBUILD_PLATFORM" in
                 build_sln PCRE.sln "Debug|Win32" ALL_BUILD
 
                 # Install and move pieces around
-                build_sln INSTALL.vcxproj "Debug|Win32"
+                devenv PCRE.sln /Build "Debug|Win32" /Project INSTALL.vcxproj
                 mkdir -p "$stage"/lib/debug/
                 mv "$stage"/lib/*.lib "$stage"/lib/debug/
 
                 # conditionally run unit tests
                 if [ "${DISABLE_UNIT_TESTS:-0}" = "0" ]; then
-                    build_sln RUN_TESTS.vcxproj "Debug|Win32"
+                    devenv PCRE.sln /Build "Debug|Win32" /Project RUN_TESTS.vcxproj
                 fi
 
                 # Now release.
                 build_sln PCRE.sln "Release|Win32" ALL_BUILD
 
                 # Install and move pieces around
-                build_sln INSTALL.vcxproj "Release|Win32"
+                devenv PCRE.sln /Build "Release|Win32" /Project INSTALL.vcxproj
                 mkdir -p "$stage"/lib/release/
                 mv "$stage"/lib/*.lib "$stage"/lib/release/
 
                 # conditionally run unit tests
                 if [ "${DISABLE_UNIT_TESTS:-0}" = "0" ]; then
-                    build_sln RUN_TESTS.vcxproj "Release|Win32"
+                    devenv PCRE.sln /Build "Release|Win32" /Project RUN_TESTS.vcxproj
                 fi
             popd
 

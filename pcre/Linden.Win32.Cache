@@ -16,6 +16,11 @@ SET(CMAKE_USE_RELATIVE_PATHS ON CACHE BOOL
 IF(BUILD_SHARED_LIBS)
     SET(INSTALL_MSVC_PDB ON CACHE BOOL
         "Install .pdb files built by MSVC, if generated")
+ELSE(BUILD_SHARED_LIBS)
+    # If we're building static libraries, try enhancing debug 
+    # information in the compilations.
+    SET(LINDEN_DEBUG_SYMBOLS ON CACHE BOOL
+        "Supply debugging information with debug and release libraries")
 ENDIF(BUILD_SHARED_LIBS)
 
 SET(PCRE_SUPPORT_JIT OFF CACHE BOOL

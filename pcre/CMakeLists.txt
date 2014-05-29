@@ -910,6 +910,18 @@ ELSE(BUILD_SHARED_LIBS)
   SET(BUILD_STATIC_LIBS ON)
 ENDIF(BUILD_SHARED_LIBS)
 
+# Linden override of debug information format
+IF(MSVC AND LINDEN_DEBUG_SYMBOLS AND BUILD_STATIC_LIBS)
+  # Get debugging info with the static library
+  # A nicer version of this is possible with a string
+  # regex removing any existing /Z[7diI] flag before
+  # appending.
+  SET(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} /Z7")
+  SET(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} /Z7")
+  SET(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /Z7")
+  SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /Z7")
+ENDIF(MSVC AND LINDEN_DEBUG_SYMBOLS)
+
 IF(PCRE_SHOW_REPORT)
   STRING(TOUPPER "${CMAKE_BUILD_TYPE}" buildtype)
   IF (CMAKE_C_FLAGS)
@@ -926,7 +938,11 @@ IF(PCRE_SHOW_REPORT)
   MESSAGE(STATUS "  C compiler ...................... : ${CMAKE_C_COMPILER}")
   MESSAGE(STATUS "  C++ compiler .................... : ${CMAKE_CXX_COMPILER}")
   MESSAGE(STATUS "  C compiler flags ................ : ${CMAKE_C_FLAGS}${cfsp}${CMAKE_C_FLAGS_${buildtype}}")
+  MESSAGE(STATUS "  C compiler release flags ........ : ${CMAKE_C_FLAGS}${cfsp}${CMAKE_C_FLAGS_RELEASE}")
+  MESSAGE(STATUS "  C compiler debug flags .......... : ${CMAKE_C_FLAGS}${cfsp}${CMAKE_C_FLAGS_DEBUG}")
   MESSAGE(STATUS "  C++ compiler flags .............. : ${CMAKE_CXX_FLAGS}${cxxfsp}${CMAKE_CXX_FLAGS_${buildtype}}")
+  MESSAGE(STATUS "  C++ compiler release flags ....... : ${CMAKE_CXX_FLAGS}${cxxfsp}${CMAKE_CXX_FLAGS_RELEASE}")
+  MESSAGE(STATUS "  C++ compiler debug flags ........ : ${CMAKE_CXX_FLAGS}${cxxfsp}${CMAKE_CXX_FLAGS_DEBUG}")
   MESSAGE(STATUS "")
   MESSAGE(STATUS "  Build 8 bit PCRE library ........ : ${PCRE_BUILD_PCRE8}")
   MESSAGE(STATUS "  Build 16 bit PCRE library ....... : ${PCRE_BUILD_PCRE16}")

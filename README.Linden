@@ -38,10 +38,13 @@
     * Unicode properties support
     * Disabled JIT
 
-    Windows isn't pretty and several approaches are possible.  For this,
-    I went with 'cmake' which was nominally already functional and was
-    at least capable of doing the right thing with tests and generated
-    header files.
+    Windows isn't pretty and several approaches are possible.  For
+    this, I went with 'cmake' which was nominally already functional
+    and was at least capable of doing the right thing with tests and
+    generated header files.  CMakeLists.txt was modified to support a
+    /Z7 option on static library builds controlled by the
+    Linden.Win32.Cache file.  It also generates more status output
+    after processing.
 
     But the model of the cmake writers was for fixed paths and the use
     of GUIs to configure the build.  This doesn't work in a headless

@@ -24,9 +24,12 @@ set -x
 top="$(pwd)"
 stage="${top}"/stage
 
+PCRE_SOURCE_DIR="pcre"
+VERSION_HEADER_FILE="$PCRE_SOURCE_DIR/config.h.generic"
+version=$(sed -n -E 's/#define PACKAGE_VERSION "([0-9.]+)"/\1/p' "${VERSION_HEADER_FILE}")
+echo "${version}.${build}" > "${stage}/VERSION.txt"
+
 case "$AUTOBUILD_PLATFORM" in
-
-
     "windows")
         load_vsvars
         pushd pcre
@@ -90,7 +93,7 @@ case "$AUTOBUILD_PLATFORM" in
             # sdk=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk/
             sdk=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/
             
-            opts="${TARGET_OPTS:--arch i386 -iwithsysroot $sdk -mmacosx-version-min=10.6}"
+            opts="${TARGET_OPTS:--arch i386 -iwithsysroot $sdk -mmacosx-version-min=10.7}"
 
             # Prefer llvm-g++ if available.
             if [ -x /usr/bin/llvm-gcc -a -x /usr/bin/llvm-g++ ]; then

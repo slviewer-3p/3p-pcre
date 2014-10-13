@@ -5,7 +5,7 @@ set -x
 # make errors fatal
 set -e
 
-if [ -z "$AUTOBUILD" ] ; then 
+if [ -z "$AUTOBUILD" ] ; then
     fail
 fi
 
@@ -91,8 +91,8 @@ case "$AUTOBUILD_PLATFORM" in
             # sdk=/Developer/SDKs/MacOSX10.6.sdk/
             # sdk=/Developer/SDKs/MacOSX10.7.sdk/
             # sdk=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk/
-            sdk=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/
-            
+            sdk=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/
+
             opts="${TARGET_OPTS:--arch i386 -iwithsysroot $sdk -mmacosx-version-min=10.7}"
 
             # Prefer llvm-g++ if available.
@@ -106,7 +106,7 @@ case "$AUTOBUILD_PLATFORM" in
                 ./configure --disable-dependency-tracking --with-pic --enable-utf --enable-unicode-properties \
                 --enable-static=yes --enable-shared=no \
                 --prefix="$stage" --includedir="$stage"/include/pcre --libdir="$libdir"/debug
-            make 
+            make
             make install
 
             # conditionally run unit tests
@@ -121,7 +121,7 @@ case "$AUTOBUILD_PLATFORM" in
                 ./configure --disable-dependency-tracking --with-pic --enable-utf --enable-unicode-properties \
                 --enable-static=yes --enable-shared=no \
                 --prefix="$stage" --includedir="$stage"/include/pcre --libdir="$libdir"/release
-            make 
+            make
             make install
 
             # conditionally run unit tests
@@ -176,7 +176,7 @@ case "$AUTOBUILD_PLATFORM" in
                 ./configure --with-pic --enable-utf --enable-unicode-properties \
                 --enable-static=yes --enable-shared=no \
                 --prefix="$stage" --includedir="$stage"/include/pcre --libdir="$libdir"/debug
-            make 
+            make
             make install
 
             # conditionally run unit tests
@@ -191,7 +191,7 @@ case "$AUTOBUILD_PLATFORM" in
                 ./configure --with-pic --enable-utf --enable-unicode-properties \
                 --enable-static=yes --enable-shared=no \
                 --prefix="$stage" --includedir="$stage"/include/pcre --libdir="$libdir"/release
-            make 
+            make
             make install
 
             # conditionally run unit tests

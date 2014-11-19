@@ -1,4 +1,3 @@
 PACKAGE_NAME = pcre
 public_build = true
 build_legacy_package = false
-AUTOBUILD_VSVER=100

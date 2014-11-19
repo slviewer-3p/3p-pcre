@@ -45,38 +45,38 @@ case "$AUTOBUILD_PLATFORM" in
                 # errors and I eventually gave up on this dead horse.
                 #
                 # cmake -P ../Linden.Win32.Cache
-                cmake -C../Linden.Win32.Cache -G'Visual Studio 10' --build . ..
+                cmake -G'Visual Studio 12' --build . ..
 
                 # Debug first
                 build_sln PCRE.sln "Debug|Win32" ALL_BUILD
 
                 # Install and move pieces around
-                devenv PCRE.sln /Build "Debug|Win32" /Project INSTALL.vcxproj
+                build_sln PCRE.sln "Debug|Win32" INSTALL.vcxproj
                 mkdir -p "$stage"/lib/debug/
-                mv "$stage"/lib/*.lib "$stage"/lib/debug/
+                mv -v Debug/*.lib "$stage"/lib/debug/
 
                 # conditionally run unit tests
                 if [ "${DISABLE_UNIT_TESTS:-0}" = "0" ]; then
-                    devenv PCRE.sln /Build "Debug|Win32" /Project RUN_TESTS.vcxproj
+                    build_sln PCRE.sln "Debug|Win32" RUN_TESTS.vcxproj
                 fi
 
                 # Now release.
                 build_sln PCRE.sln "Release|Win32" ALL_BUILD
 
                 # Install and move pieces around
-                devenv PCRE.sln /Build "Release|Win32" /Project INSTALL.vcxproj
+                build_sln PCRE.sln "Release|Win32" INSTALL.vcxproj
                 mkdir -p "$stage"/lib/release/
-                mv "$stage"/lib/*.lib "$stage"/lib/release/
+                mv -v Release/*.lib "$stage"/lib/release/
 
                 # conditionally run unit tests
                 if [ "${DISABLE_UNIT_TESTS:-0}" = "0" ]; then
-                    devenv PCRE.sln /Build "Release|Win32" /Project RUN_TESTS.vcxproj
+                    build_sln PCRE.sln "Release|Win32" RUN_TESTS.vcxproj
                 fi
             popd
 
             # Fixup include directory
             mkdir -p "$stage"/include/pcre/
-            mv "$stage"/include/*.h "$stage"/include/pcre/
+            cp -vp *.h "$stage"/include/pcre/
         popd
     ;;
 

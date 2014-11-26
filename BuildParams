@@ -1,3 +1,4 @@
-PACKAGE_NAME = pcre
+#commented out variables for a test
+#PACKAGE_NAME = pcre
 public_build = true
-build_legacy_package = false
+#build_legacy_package = false

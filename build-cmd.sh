@@ -11,6 +11,9 @@ fi
 
 if [ "$OSTYPE" = "cygwin" ] ; then
     export AUTOBUILD="$(cygpath -u $AUTOBUILD)"
+    # Turn off Incredibuild: it seems to swallow unit-test errors, reporting
+    # only that something failed. How useful.
+    export USE_INCREDIBUILD=0
 fi
 
 # run build commands from root checkout directory

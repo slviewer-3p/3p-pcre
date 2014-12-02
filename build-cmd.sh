@@ -80,6 +80,7 @@ case "$AUTOBUILD_PLATFORM" in
             # Fixup include directory
             mkdir -p "$stage"/include/pcre/
             cp -vp *.h "$stage"/include/pcre/
+            cp -vp Win32/*.h "$stage"/include/pcre/
         popd
     ;;
 

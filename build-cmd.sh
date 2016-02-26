@@ -33,54 +33,37 @@ version=$(sed -n -E 's/#define PACKAGE_VERSION "([0-9.]+)"/\1/p' "${VERSION_HEAD
 echo "${version}.${build}" > "${stage}/VERSION.txt"
 
 case "$AUTOBUILD_PLATFORM" in
-    "windows")
+    windows*)
         load_vsvars
         pushd pcre
 
             # Create project/build directory
-            mkdir -p Win32
-            pushd Win32
+            mkdir -p Win
+            pushd Win
 
-                # Generate project files
-                # cmake has some internal problems with the -P/-C options
-                # regarding trailing spaces and the length of the filename.
-                # Long filenames would cause spurious 'Error processing file'
-                # errors and I eventually gave up on this dead horse.
-                #
-                # cmake -P ../Linden.Win32.Cache
-                cmake -G'Visual Studio 12' --build . ..
-
-                # Debug first
-                build_sln PCRE.sln "Debug|Win32" ALL_BUILD
-
-                # Install and move pieces around
-                build_sln PCRE.sln "Debug|Win32" INSTALL.vcxproj
-                mkdir -p "$stage"/lib/debug/
-                mv -v Debug/*.lib "$stage"/lib/debug/
-
-                # conditionally run unit tests
-                if [ "${DISABLE_UNIT_TESTS:-0}" = "0" ]; then
-                    build_sln PCRE.sln "Debug|Win32" RUN_TESTS.vcxproj
+                if [ "$AUTOBUILD_ADDRSIZE" = 32 ]
+                then cmake -G 'Visual Studio 12' --build . ..
+                else cmake -G 'Visual Studio 12 Win64' --build . ..
                 fi
 
-                # Now release.
-                build_sln PCRE.sln "Release|Win32" ALL_BUILD
+                build_sln PCRE.sln "Release|$AUTOBUILD_WIN_VSPLATFORM" ALL_BUILD
 
                 # Install and move pieces around
-                build_sln PCRE.sln "Release|Win32" INSTALL.vcxproj
+                build_sln PCRE.sln "Release|$AUTOBUILD_WIN_VSPLATFORM" INSTALL.vcxproj
                 mkdir -p "$stage"/lib/release/
+
                 mv -v Release/*.lib "$stage"/lib/release/
 
                 # conditionally run unit tests
                 if [ "${DISABLE_UNIT_TESTS:-0}" = "0" ]; then
-                    build_sln PCRE.sln "Release|Win32" RUN_TESTS.vcxproj
+                    build_sln PCRE.sln "Release|$AUTOBUILD_WIN_VSPLATFORM" RUN_TESTS.vcxproj
                 fi
             popd
 
             # Fixup include directory
             mkdir -p "$stage"/include/pcre/
             cp -vp *.h "$stage"/include/pcre/
-            cp -vp Win32/*.h "$stage"/include/pcre/
+            cp -vp Win/*.h "$stage"/include/pcre/
         popd
     ;;
 

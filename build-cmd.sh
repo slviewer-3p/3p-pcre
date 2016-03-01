@@ -41,10 +41,7 @@ case "$AUTOBUILD_PLATFORM" in
             mkdir -p Win
             pushd Win
 
-                if [ "$AUTOBUILD_ADDRSIZE" = 32 ]
-                then cmake -G 'Visual Studio 12' --build . ..
-                else cmake -G 'Visual Studio 12 Win64' --build . ..
-                fi
+                cmake -G "$AUTOBUILD_WIN_CMAKE_GEN" --build . ..
 
                 build_sln PCRE.sln "Release|$AUTOBUILD_WIN_VSPLATFORM" ALL_BUILD
 

@@ -37,7 +37,7 @@ stage="${top}"/stage
 PCRE_SOURCE_DIR="pcre"
 VERSION_HEADER_FILE="$PCRE_SOURCE_DIR/config.h.generic"
 version=$(sed -n -E 's/#define PACKAGE_VERSION "([0-9.]+)"/\1/p' "${VERSION_HEADER_FILE}")
-echo "${version}.${build}" > "${stage}/VERSION.txt"
+echo "${version}.${AUTOBUILD_BUILD_ID}" > "${stage}/VERSION.txt"
 
 case "$AUTOBUILD_PLATFORM" in
     windows*)

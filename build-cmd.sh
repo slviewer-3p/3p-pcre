@@ -22,14 +22,13 @@ fi
 
 # run build commands from root checkout directory
 cd "$(dirname "$0")"
+top="$(pwd)"
+stage="${top}"/stage
 
 # load autbuild provided shell functions and variables
 source_environment_tempfile="$stage/source_environment.sh"
 "$autobuild" source_environment > "$source_environment_tempfile"
 . "$source_environment_tempfile"
-
-top="$(pwd)"
-stage="${top}"/stage
 
 PCRE_SOURCE_DIR="pcre"
 VERSION_HEADER_FILE="$PCRE_SOURCE_DIR/config.h.generic"

@@ -1,14 +1,14 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # turn on verbose debugging output for parabuild logs.
-set -x
+exec 4>&1; export BASH_XTRACEFD=4; set -x
 # make errors fatal
 set -e
 # complain on unset env variable
 set -u
 
 if [ -z "$AUTOBUILD" ] ; then
-    fail
+    exit 1
 fi
 
 if [ "$OSTYPE" = "cygwin" ] ; then
@@ -24,12 +24,9 @@ fi
 cd "$(dirname "$0")"
 
 # load autbuild provided shell functions and variables
-set +x
-eval "$("$autobuild" source_environment)"
-set -x
-
-# set LL_BUILD
-set_build_variables convenience Release
+source_environment_tempfile="$stage/source_environment.sh"
+"$autobuild" source_environment > "$source_environment_tempfile"
+. "$source_environment_tempfile"
 
 top="$(pwd)"
 stage="${top}"/stage
@@ -48,7 +45,7 @@ case "$AUTOBUILD_PLATFORM" in
             mkdir -p Win
             pushd Win
 
-                cmake -G "$AUTOBUILD_WIN_CMAKE_GEN" --build . .. -DCMAKE_CXX_FLAGS="$LL_BUILD"
+                cmake -G "$AUTOBUILD_WIN_CMAKE_GEN" --build . .. -DCMAKE_CXX_FLAGS="$LL_BUILD_RELEASE"
 
                 build_sln PCRE.sln "Release|$AUTOBUILD_WIN_VSPLATFORM" ALL_BUILD
 
@@ -76,7 +73,7 @@ case "$AUTOBUILD_PLATFORM" in
             libdir="$top/stage/lib"
             mkdir -p "$libdir"/release
 
-            opts="${TARGET_OPTS:--arch $AUTOBUILD_CONFIGURE_ARCH $LL_BUILD}"
+            opts="${TARGET_OPTS:--arch $AUTOBUILD_CONFIGURE_ARCH $LL_BUILD_RELEASE}"
 
             # Prefer llvm-g++ if available.
             if [ -x /usr/bin/llvm-gcc -a -x /usr/bin/llvm-g++ ]; then
@@ -128,7 +125,7 @@ case "$AUTOBUILD_PLATFORM" in
             fi
 
             # Default target per AUTOBUILD_ADDRSIZE
-            opts="${TARGET_OPTS:--m$AUTOBUILD_ADDRSIZE $LL_BUILD}"
+            opts="${TARGET_OPTS:--m$AUTOBUILD_ADDRSIZE $LL_BUILD_RELEASE}"
 
             # Handle any deliberate platform targeting
             if [ -z "${TARGET_CPPFLAGS:-}" ]; then
@@ -158,7 +155,7 @@ case "$AUTOBUILD_PLATFORM" in
 
     *)
         echo "Unrecognized platform" 1>&2
-        fail
+        exit 1
     ;;
 esac
 
@@ -166,5 +163,3 @@ mkdir -p stage/LICENSES
 cp -a "pcre/LICENCE" "stage/LICENSES/pcre-license.txt"
 mkdir -p "$stage"/docs/pcre/
 cp -a "$top"/README.Linden "$stage"/docs/pcre/
-
-pass

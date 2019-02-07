@@ -21,6 +21,10 @@
 @rem Zoltan Herczeg added libpcre16 support
 @rem Zoltan Herczeg added libpcre32 support
 
+@rem nat 2019-02-07: for some reason the fc.exe command below is no longer
+@rem being found on the default PATH.
+set fc=c:\Windows\system32\fc.exe
+
 setlocal enabledelayedexpansion
 if [%srcdir%]==[] (
 if exist testdata\ set srcdir=.)
@@ -278,10 +282,10 @@ if [%1]==[22] (
   set type=-%bits%
 )
 
-fc /n %srcdir%\testdata\%testoutput%%type% %2%bits%\%testoutput% >NUL
+%fc% /n %srcdir%\testdata\%testoutput%%type% %2%bits%\%testoutput% >NUL
 
 if errorlevel 1 (
-  echo.          failed comparison: fc /n %srcdir%\testdata\%testoutput% %2%bits%\%testoutput%
+  echo.          failed comparison: %fc% /n %srcdir%\testdata\%testoutput% %2%bits%\%testoutput%
   if [%1]==[2] (
     echo.
     echo ** Test 2 requires a lot of stack. PCRE can be configured to
